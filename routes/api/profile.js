@@ -103,7 +103,7 @@ router.get('/', async (req,res) => {
         res.json(profiles);
     } catch (err) {
         console.error(err.message);
-        // res.status(500).send('Server Error');
+        res.status(500).send('Server Error');
     }
 });
 
@@ -117,9 +117,21 @@ router.get('/user/:user_id', async (req,res) => {
     } catch (err) {
         console.error(err.message);
         if(err.kind == 'ObjectId') {
-            if(!profile) return req.status(400).sjon({msg: 'There is no profile for this user'});
+            if(!profile) return req.status(400).json({msg: 'There is no profile for this user'});
         }
         res.status(500).send('Server Error');
+    }
+});
+
+router.delete('/', auth, async (req,res) => {
+    try {
+        console.log('hello');
+        await Profile.findOneAndRemove({ user : req.user.id });
+        await User.findOneAndRemove({ _id : req.user.id });
+        res.json({msg: 'User deleted' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error');
     }
 });
 
