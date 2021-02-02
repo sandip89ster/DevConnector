@@ -25,14 +25,14 @@ router.get('/me', auth, async (req, res) => {
 
 // @route       POST api/profile
 // @acess       Private
-router.post('/', auth,[
+router.post('/', [auth,[
     check('status', 'Status is required')
     .not()
     .isEmpty(),
     check('skills', 'Skills is required')
     .not()
     .isEmpty()
-], async (req, res) => {
+]], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -119,7 +119,7 @@ router.get('/user/:user_id', async (req,res) => {
         if(err.kind == 'ObjectId') {
             if(!profile) return req.status(400).json({msg: 'There is no profile for this user'});
         }
-        res.status(500).send('Server Error');
+        res.status(500).udesend('Server Error');
     }
 });
 
